@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Feedback Form</title>
+  
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background: url('images/feedback img.png') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Navbar with semi-transparent background for better visibility */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      padding: 10px 20px;
+      background: rgba(0, 123, 255, 0.5);
+      color: white;
+      box-sizing: border-box;
+    }
+
+    nav .left {
+      font-weight: bold;
+      font-size: 20px;
+    }
+
+    nav .right a {
+      color: white;
+      text-decoration: none;
+      margin-left: 20px;
+      font-weight: bold;
+    }
+
+    nav .right a:hover { text-decoration: underline; }
+
+    /* Center form container */
+    .container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+    }
+
+    .box {
+      background: rgba(255, 255, 255, 0.65); /* semi-transparent */
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+      width: 400px;
+      text-align: center;
+    }
+
+    h2 { margin-bottom: 15px; }
+
+    input, textarea, button {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover { background: #0056b3; }
+
+    #thanks {
+      text-align: center;
+      color: green;
+      font-weight: bold;
+      display: none;
+      margin-top: 10px;
+    }
+
+    /* Star rating */
+ .stars { display: flex; flex-direction: row-reverse; justify-content: flex-end; margin: 10px 0; } .stars input { display: none; } .stars label { font-size: 25px; color: #ccc; padding: 0 5px; cursor: pointer; transition: color 0.2s; } .stars input:checked ~ label, .stars label:hover, .stars label:hover ~ label { color: gold;}
+
+  </style>
+</head>
+<body>
+  
+
+<nav>
+  <div class="left">Feedback Collection System</div>
+  <div class="right">
+    <a href="admin.html">Admin Login</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="box">
+    <h2>Feedback Form</h2>
+    <form id="feedbackForm">
+      <input type="text" id="name" placeholder="Your Name" required>
+      <input type="email" id="email" placeholder="Your Email" required>
+
+      <div class="stars"> <input type="radio" id="star5" name="rating" value="5"><label for="star5">★</label> <input type="radio" id="star4" name="rating" value="4"><label for="star4">★</label> <input type="radio" id="star3" name="rating" value="3"><label for="star3">★</label> <input type="radio" id="star2" name="rating" value="2"><label for="star2">★</label> <input type="radio" id="star1" name="rating" value="1"><label for="star1">★</label> </div>
+
+
+
+      <textarea id="comments" rows="4" placeholder="Your Comments" required></textarea>
+      <button type="submit">Submit Feedback</button>
+    </form>
+    <p id="thanks">Thanks for your feedback!</p>
+  </div>
+</div>
+
+<script>
+const feedbackForm = document.getElementById('feedbackForm');
+const thanks = document.getElementById('thanks');
+
+feedbackForm.addEventListener('submit', e => {
+  e.preventDefault();
+
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const rating = document.querySelector('input[name="rating"]:checked')?.value;
+  const comments = document.getElementById('comments').value.trim();
+
+  if (name && email && rating && comments) {
+    const feedbacks = JSON.parse(localStorage.getItem('feedbacks')) || [];
+    const timestamp = new Date().toLocaleString();
+    feedbacks.push({ name, email, rating, comments, timestamp });
+    localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
+
+    feedbackForm.reset();
+    thanks.style.display = 'block';
+    setTimeout(() => { thanks.style.display='none'; }, 3000);
+  } else {
+    alert("Please select a star rating!");
+  }
+});
+</script>
+
+</body>
+</html>
